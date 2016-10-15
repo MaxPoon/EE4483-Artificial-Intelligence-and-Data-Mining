@@ -1,123 +1,135 @@
-#EE4483 CA-Project1 Report
+#EE4483 CA-Project2 Report
 ## Source Codes
-### Solution 1:
-```python3
-x=float(input("Please enter the value of x: "))
-if x==0:
-    print("x^(3/5) is 0")
-if x>0:
-    if x<1:
-        left = x
-        right = 1
-    else:
-        left = 1
-        right = x
-else:
-    if x>-1:
-        left = -1
-        right = x
-    else:
-        left = x
-        right = -1
-x3=x**3
-error = 0.000001
-while(True):
-    mid = (left+right)/2
-    mid5=mid**5
-    if abs(mid5-x3)<error:
-        print("x^(3/5) is "+str(mid))
-        break
-    if mid5<x3:
-        left = mid
-    else:
-        right = mid
-```
-### Solution 2:
+```python
+from copy import deepcopy
+class State:
+    def __init__(self,currentState, zero, parrent=None,pathLength=0):
+        self.parrent = parrent
+        self.zero = zero
+        self.pathLength = pathLength
+        self.currentState = currentState
+        self.heuristic = pathLength
+        for row in range(3):
+            for col in range(3):
+                self.heuristic += abs(row-goalCoordinate[currentState[row][col]][0])+abs(col-goalCoordinate[currentState[row][col]][1])
+goal = [[1,2,3],[8,0,4],[7,6,5]]
+goalCoordinate = [[1,1],[0,0],[0,1],[0,2],[1,2],[2,2],[2,1],[2,0],[1,0]]
+startState = [[],[],[]]
+open=[]
+print("""
+Enter each row of the start state. Use integer 1-8 to represent the eight tiles and space for the empty grid. For example:
+First row:  321
+Second row: 4 8
+Third row:  567
 
-```python3
-x=float(input("Please enter the value of x: "))
-x3=x**3
-error = 0.000001
-y=x/2
+Our goal state is:
+123
+8 4
+765
+""")
+
+firstRow = input("Enter the first row:  ")
+secondRow = input("Enter the second row: ")
+thirdRow = input("Enter the third row:  ")
+for c in firstRow:
+    startState[0].append(int(c) if c!=" " else 0)
+for c in secondRow:
+    startState[1].append(int(c) if c!=" " else 0)
+for c in thirdRow:
+    startState[2].append(int(c) if c!=" " else 0)
+if startState == goal:
+    print()
+    print("Solution: ")
+    print(firstRow)
+    print(secondRow)
+    print(thirdRow)
+    quit()
+for r in range(3):
+    for c in range(3):
+        if startState[r][c]==0:
+            zero=[r,c]
+open.append(State(startState,zero))
 while True:
-    y5=y**5
-    if abs(y5-x3)<error:
-        print("x^(3/5) is " + str(y))
-        break
-    y=y-(y5-x3)/(5*(y**4))
-```
-## Question a: Please briefly explain the search strategies of the two algorithms.
-For solution 1, I used binary search algorithm. Before starting the loop, the value of left and right will be set to define the interval where x^(3/5) falls in. In which iteration of the while loop, we compare the mid point value to the power of 5 with the expected value, which is x cube. The mid point value will be printed out if it matches the expected value. Otherwise we will continue to search in either [left, mid] or [mid, right] according to the result of comparion between mid point value and the expected value.
+    state = open[0]
+    open = open[1:]
+    currentState = state.currentState
+    zeroR = state.zero[0]
+    zeroC = state.zero[1]
+    pathLength = state.pathLength + 1
+    if zeroR>0:
+        newState = deepcopy(currentState)
+        newState[zeroR][zeroC] = newState[zeroR-1][zeroC]
+        newState[zeroR-1][zeroC] = 0
+        newState = State(newState,[zeroR-1,zeroC], state, pathLength)
+        if newState.heuristic-pathLength==0:
+            lastState = newState
+            break
+        open.append(newState)
+    if zeroR < 2:
+        newState = deepcopy(currentState)
+        newState[zeroR][zeroC] = newState[zeroR + 1][zeroC]
+        newState[zeroR + 1][zeroC] = 0
+        newState = State(newState, [zeroR + 1, zeroC], state, pathLength)
+        if newState.heuristic - pathLength == 0:
+            lastState = newState
+            break
+        open.append(newState)
+    if zeroC > 0:
+        newState = deepcopy(currentState)
+        newState[zeroR][zeroC] = newState[zeroR][zeroC-1]
+        newState[zeroR][zeroC-1] = 0
+        newState = State(newState, [zeroR , zeroC -1], state, pathLength)
+        if newState.heuristic - pathLength == 0:
+            lastState = newState
+            break
+        open.append(newState)
+    if zeroC < 2:
+        newState = deepcopy(currentState)
+        newState[zeroR][zeroC] = newState[zeroR][zeroC+1]
+        newState[zeroR][zeroC+1] = 0
+        newState = State(newState, [zeroR , zeroC +1], state, pathLength)
+        if newState.heuristic - pathLength == 0:
+            lastState = newState
+            break
+        open.append(newState)
+    open = sorted(open, key = lambda state: state.heuristic)
 
-For solution 2, I use Newton's method. We need to find y such that y^5 ^-  x^3^ =0. We can start with y0 = x/2 and apply the recursive formula in each iteration: yn+1 = yn - f(yn)/f'(yn). And y will keep getting closer to the expected value.
+state = lastState
+solution = [state.currentState]
+while state.parrent:
+    state = state.parrent
+    solution.append(state.currentState)
+print("\nSolution:\n")
+for i in range(len(solution)-1,-1,-1):
+    state = solution[i]
+    for r in range(3):
+        string=""
+        for c in range(3):
+            string+= str(state[r][c]) if state[r][c]!=0 else " "
+        print(string)
+    print()
+```
+##Question a: The program should be able to solve the 8-puzzle problem with arbitrary input. A visual interface is not necessary but the program should output each step when solving the puzzle.
 
-## Question b: Prove that your algorithms guarantee to find the correct answer.
-For solution 1, in each iteration, the size of the interval will become half of the previous one. And the target we are searching for will still be in the new interval. And the while loop will not stop until the target is found. So it guarantee to find the correct anser by the time when the size of interval becomes smaller than 2*deviation allowance.
+In the command line, type: ```python CA2.py``` or run the script in any python IDE. After enter each row of the start state, the program will print out each step when solving the puzzle, if it is solvable with the input data.
 
-For solution 2, the rate of convergence of Newton's Method is quadratic for our case. So it will find the answer in the end.
+##Question b: Explain what heuristic measure and search strategy you use.
 
-## Question c: Compare the two search algorithms and their complexity; explain which one is better and why it is better.
+The heuristic measure  is f(n) = g(n)+h(n), where g(n) is  the length of the path (i.e. the depth of this state) and h(n) is sum of Manhattan Distance. h(n) = $\sum_{i=0}^8 |x_i -\bar{x}| +  |y_i -\bar{y}|$. And the heuristic value of each state is computed by the following code:
+```python
+self.heuristic = pathLength
+for row in range(3):
+	for col in range(3):
+		self.heuristic += abs(row-goalCoordinate[currentState[row][col]][0])+abs(col-goalCoordinate[currentState[row][col][1])
+```
+In each iteration, the state with the minimal heuristic value in the open states list would be examined. And its child states would be generated and inserted into the open states list.
 
-The time complexity of the first solution is O(logN) where N = x/error_allowance. The time complexity of the second solution is approximate to O(logx). And it also depends on the initial value. So time complexity-wise, it is better to use Newton's Method. I have modify the codes to track the number of iterations for each solution as shown below:
+##Question c: Discuss the complexity and memory cost of your search algorithm.
 
-Binary search
-```
-x=float(input("Please enter the value of x: "))
-if x==0:
-    print("x^(3/5) is 0")
-if x>0:
-    if x<1:
-        left = x
-        right = 1
-    else:
-        left = 1
-        right = x
-else:
-    if x>-1:
-        left = -1
-        right = x
-    else:
-        left = x
-        right = -1
-x3=x**3
-error = 0.000001
-counter = 0
-while(True):
-    mid = (left+right)/2
-    mid5=mid**5
-    counter+=1
-    if abs(mid5-x3)<error:
-        print("number of iterations: "+str(counter),"x^(3/5) is "+str(mid))
-        break
-    if mid5<x3:
-        left = mid
-    else:
-        right = mid
-```
-Newton's Method
-```
-x=float(input("Please enter the value of x: "))
-x3=x**3
-error = 0.000001
-y=x/2
-counter=0
-while True:
-    y5=y**5
-    counter+=1
-    if abs(y5-x3)<error:
-        print("number of iterations: "+str(counter),"x^(3/5) is " + str(y))
-        break
-    y=y-(y5-x3)/(5*(y**4))
-```
-And below is the output of each solution when the inputs are both 1000:
+The time complexity in the worst case is O($4^d$) where d is the length of the path, as there might be up to four possible moves in each step. And the program would store all the states that have been generated in the memory, because we need to print the path to goal state in the end. So the space complexity is also O($4^d$).
 
-Binary search
-```
-number of iterations: 54 x^(3/5) is 63.095734448019314
-```
+Although the complexity for the worst case is the same as BFS and DFS algorithm, heuristic search enables us to skip most of the states and find the path faster in average case.
 
-Newton's Method
-```
-number of iterations: 15 x^(3/5) is 63.09573444801932
-```
-So it is obvious that Newton's Method outperforms the binary search algorithm.
+##Question d: Explain in the worst case, how many steps your program need to complete the search.
+
+As discussed above, the program needs to complete up to $4^d$ steps.
