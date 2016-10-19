@@ -128,7 +128,7 @@ In each iteration, the state with the minimal heuristic value in the open states
 
 ##Question c: Discuss the complexity and memory cost of your search algorithm.
 
-The time complexity in the worst case is O($4^d$) where d is the length of the path, as there might be up to four possible moves in each step. And the program would store all the states that have been generated in the memory, because we need to print the path to goal state in the end. So the space complexity is also O($4^d$).
+The time complexity in the worst case is O($$4^d$$) where d is the length of the path, as there might be up to four possible moves in each step. And the program would store all the states that have been generated in the memory, because we need to print the path to goal state in the end. So the space complexity is also O($4^d$).
 
 Although the complexity for the worst case is the same as BFS and DFS algorithm, heuristic search enables us to skip most of the states and find the path faster in average case.
 
