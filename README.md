@@ -1,4 +1,4 @@
-Assignment requirements: https://github.com/MaxPoon/EE4483-Artificial-Intelligence-and-Data-Mining/blob/Project2_8Puzzle/EE4483-project2.pdf
+###[Assignment requirements](https://github.com/MaxPoon/EE4483-Artificial-Intelligence-and-Data-Mining/blob/Project2_8Puzzle/EE4483-project2.pdf)
 
 #EE4483 CA-Project2 Report
 ## Source Codes
