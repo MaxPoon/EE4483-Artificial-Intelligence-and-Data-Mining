@@ -508,3 +508,13 @@ for k,v in confidence_table.items():
 	if v==1:
 		print(k,v)
 ```
+
+####i. Do you find any “interesting” rules? What are they? Briefly explain why. 
+
+When the minimum support is higher, it takes much shorter time to calculate the confidence of the association rules that meet the minimum support.
+
+When I set the minimum support 5% or 10%, my program returned the result immediately. And it takes a few seconds when there is no minimum support requirement.
+
+####j. State what software tool(s) and functions you use to complete this homework. 
+
+Python3.5 and its built-in math library.
