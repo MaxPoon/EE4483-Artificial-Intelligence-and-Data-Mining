@@ -219,3 +219,128 @@ for k,v in d.items():
 			two+=1
 print(four/total,three/total,two/total)
 ```
+
+####f. How many association rules have a minimum confidence of 50% and a minimum support of 5% and 10%, respectively? 
+
+Association rules that have a minimum confidence of 50% and a minimum support of 5%:
+Jam,Olive->Ketchup
+Milk,Olive->Fish
+Coffee,Milk->Ginger
+Egg,Milk->Ham
+Ginger,Milk->Coffee
+Quiche,Veg->Olive
+Jam,Ketchup->Olive
+Fish,Milk->Ham
+Fish,Milk->Ketchup
+Ham,Milk->Fish
+Ginger,Yogurt->Milk
+Fish,Milk->Olive
+Fish,Milk->Egg
+Fish,Quiche->Ham
+Coffee,Ginger->Milk
+Olive,Veg->Quiche
+Ketchup,Milk->Fish
+Ham,Tea->Fish
+Ketchup,Olive->Jam
+Ham,Milk->Egg
+Fish,Tea->Ham
+Fish,Ketchup->Jam
+Fish,Jam->Ketchup
+Milk,Yogurt->Ginger
+Egg,Ham->Milk
+Ginger->Milk
+Egg,Fish->Milk
+Fish,Ketchup->Milk
+Ginger,Milk->Yogurt
+Fish,Ham->Quiche
+Ham,Quiche->Fish
+Jam,Ketchup->Fish
+
+Association rules that have a minimum confidence of 50% and a minimum support of 10%:
+Ginger->Milk
+
+Source code:
+
+```python
+def support(d,m, n, prefix, suffix):
+	if m==n:
+		if prefix in d:
+			d[prefix]+=1
+		else:
+			d[prefix]=1
+	else:
+		for i in range(len(suffix)-(n-m)+1):
+			if m+1<n:
+				support(d,m+1,n,prefix+suffix[i]+",", suffix[i+1:] )
+			else:
+				support(d,m+1,n,prefix+suffix[i], suffix[i+1:] )
+
+def combinations_recursive(prefix,suffix,r, c):
+	if r==len(prefix):
+		c.append(prefix)
+	else:
+		for i in range(len(suffix)-(r-len(prefix))+1):
+			combinations_recursive(prefix+[suffix[i]], suffix[i+1:],r,c)
+
+def combinations(n,r):
+	c = []
+	combinations_recursive([],[i for i in range(n)],r,c)
+	return c
+
+
+def confidence(itemset, d, confidence_table, minsup=0):
+	if d[itemset]<minsup:
+		return
+	itemList = itemset.split(',')
+	if len(itemList)==1:
+		return
+	for r in range(1,len(itemList)):
+		X_index = combinations(len(itemList),r)
+		X_sets = []
+		Y_sets = []
+		for index in X_index:
+			X_sets.append([])
+			Y_sets.append([])
+			for i in range(len(itemList)):
+				if i in index:
+					X_sets[-1].append(itemList[i])
+				else:
+					Y_sets[-1].append(itemList[i])
+		for i in range(len(X_sets)):
+			key = ','.join(X_sets[i])+'->'+','.join(Y_sets[i])
+			value = d[itemset]/d[','.join(X_sets[i])]
+			confidence_table[key] = value
+
+transactions = []
+i = 0
+with open('grocery.basket.txt','r') as f:
+	for line in f:
+		transactions.append([])
+		for word in line.split(','):
+			w = word
+			if w[-1]=='\n':
+				w=w[:-1]
+			transactions[i].append(w)
+		i+=1
+for transaction in transactions:
+	transaction.sort()
+d = {}
+for transaction in transactions:
+	for i in range(1,len(transaction)):
+		support(d,0,i,"",transaction)
+print("Association rules that have a minimum confidence of 50% and a minimum support of 5%:")
+confidence_table={}
+for k,v in d.items():
+	confidence(k, d, confidence_table, minsup=0.05*150)
+for k,v in confidence_table.items():
+	if v>=0.5:
+		print(k)
+print()
+print("Association rules that have a minimum confidence of 50% and a minimum support of 10%:")
+confidence_table={}
+for k,v in d.items():
+	confidence(k, d, confidence_table, minsup=0.1*150)
+for k,v in confidence_table.items():
+	if v>=0.5:
+		print(k)
+```
