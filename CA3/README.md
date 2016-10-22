@@ -40,7 +40,44 @@ print(total)
 
 ####b. What is the maximum size (in terms of number of items) of frequent itemsets (including those with minsup > 0) that can be extracted from this dataset? 
 
-Since there are 22 items. The maximum size is 22.
+The maximum size of the frequent itemsets is the size of the transaction with the most of items. The maximum size is 10. And the frequent itemsets having size of 10 are:
+
+['Ginger', 'Olive', 'Diaper', 'Tea', 'Lemon', 'Quiche', 'Salad', 'Egg', 'Veg', 'Banana']
+['Salad', 'Coffee', 'Egg', 'Ginger', 'Milk', 'Yogurt', 'Nuts', 'Banana', 'IceCream', 'Apple']
+['Veg', 'Ham', 'Diaper', 'Ketchup', 'Milk', 'Egg', 'Banana', 'Apple', 'Quiche', 'Fish']
+['Milk', 'Banana', 'Ginger', 'Quiche', 'Veg', 'Diaper', 'Tea', 'Olive', 'IceCream', 'Nuts']
+['Jam', 'Ketchup', 'Nuts', 'Apple', 'Fish', 'Olive', 'PeanutButter', 'Egg', 'Quiche', 'Coffee']
+['Rootbeer', 'Ketchup', 'Olive', 'Fish', 'Ginger', 'Milk', 'Apple', 'Egg', 'Ham', 'Coffee']
+['Quiche', 'Ketchup', 'PeanutButter', 'Salad', 'Jam', 'Olive', 'Coffee', 'Lemon', 'Fish', 'Milk']
+['Ham', 'Nuts', 'Fish', 'Lemon', 'Egg', 'PeanutButter', 'Yogurt', 'Ketchup', 'Tea', 'Milk']
+['Olive', 'Salad', 'IceCream', 'Diaper', 'Lemon', 'Coffee', 'Fish', 'Ginger', 'Apple', 'Nuts']
+['Egg', 'Yogurt', 'IceCream', 'PeanutButter', 'Diaper', 'Ginger', 'Nuts', 'Salad', 'Ketchup', 'Rootbeer']
+['Lemon', 'Banana', 'Salad', 'Tea', 'Egg', 'Rootbeer', 'Olive', 'IceCream', 'Ginger', 'Apple']
+['Nuts', 'Jam', 'Apple', 'Ginger', 'Yogurt', 'Tea', 'Ham', 'Egg', 'Milk', 'Salad']
+['Ham', 'Olive', 'Salad', 'Egg', 'Milk', 'Apple', 'IceCream', 'Diaper', 'Banana', 'Fish']
+
+Source code:
+```python
+transactions = []
+i = 0
+with open('grocery.basket.txt','r') as f:
+	for line in f:
+		transactions.append([])
+		for word in line.split(','):
+			w = word
+			if w[-1]=='\n':
+				w=w[:-1]
+			transactions[i].append(w)
+		i+=1
+maxSize = 1
+for i in range(150):
+	if len(transactions[i]) > maxSize:
+		maxSize = len(transactions[i])
+print(maxSize)
+for transaction in transactions:
+	if len(transaction)==maxSize:
+		print(transaction)
+```
 
 ####c. Which 2‐itemset(s) and 3‐itemset(s) have the largest support among all the frequent 2‐itemsets and 3‐itemsets, respectively?
 
