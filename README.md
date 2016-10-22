@@ -344,3 +344,7 @@ for k,v in confidence_table.items():
 	if v>=0.5:
 		print(k)
 ```
+
+####g. What are the two other items that customers most likely would buy when they buy Milk and Nuts? 
+
+Egg and Ham. The confidence of the association rule Milk,Nuts->Egg,Ham is 0.3333, it is the highest among all the association rules where X is Milk, Nuts and Y has size of 2.
