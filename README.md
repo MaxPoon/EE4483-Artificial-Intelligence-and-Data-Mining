@@ -1,7 +1,5 @@
 #EE4483 CA-Project3 Report
 
-Programming tools: python3.5
-
 ####a. What  is  the  maximum  number  of  possible  itemsets  (including  all  1‐itemsets)  and  association  rules (including  all  rules  that  have  zero  support  and/or  zero  confidence)  that  can  be  generated  from  this dataset?  
 
 The total number of possible itemsets is: 22C1 +  22C2 + 22C3 + ... + 22C21 + 22C22 = 4194303
