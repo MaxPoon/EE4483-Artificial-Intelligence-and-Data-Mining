@@ -1,7 +1,7 @@
 #EE4483 CA-Project1 Report
 ## Source Codes
 ### Solution 1:
-```python3
+```python
 x=float(input("Please enter the value of x: "))
 if x==0:
     print("x^(3/5) is 0")
@@ -34,7 +34,7 @@ while(True):
 ```
 ### Solution 2:
 
-```python3
+```python
 x=float(input("Please enter the value of x: "))
 x3=x**3
 error = 0.000001
@@ -61,7 +61,7 @@ For solution 2, the rate of convergence of Newton's Method is quadratic for our 
 The time complexity of the first solution is O(logN) where N = x/error_allowance. The time complexity of the second solution is approximate to O(logx). And it also depends on the initial value. So time complexity-wise, it is better to use Newton's Method. I have modify the codes to track the number of iterations for each solution as shown below:
 
 Binary search
-```
+```python
 x=float(input("Please enter the value of x: "))
 if x==0:
     print("x^(3/5) is 0")
@@ -95,7 +95,7 @@ while(True):
         right = mid
 ```
 Newton's Method
-```
+```python
 x=float(input("Please enter the value of x: "))
 x3=x**3
 error = 0.000001
